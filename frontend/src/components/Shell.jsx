@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, RefreshCw, Search } from 'lucide-react';
+import { CheckCircle2, Menu, RefreshCw, Search, X } from 'lucide-react';
 
 import { navItems } from '../data/navigation.jsx';
 
@@ -18,7 +18,7 @@ export function Shell({ activePage, setActivePage, children, notice, loading, on
           <div className="brand-mark">IO</div>
           <div>
             <strong>OrderDesk</strong>
-            <span>Management</span>
+            <span>Inventory operations</span>
           </div>
         </div>
         <nav>
@@ -46,7 +46,13 @@ export function Shell({ activePage, setActivePage, children, notice, loading, on
             <RefreshCw size={20} aria-hidden="true" />
           </button>
         </header>
-        {notice && <div className="notice" role="status">{notice}</div>}
+        {notice && (
+          <div className="toast" role="status">
+            <CheckCircle2 size={18} aria-hidden="true" />
+            <span>{notice}</span>
+            <X size={16} aria-hidden="true" />
+          </div>
+        )}
         <main className="page-main">
           {loading ? <div className="loading">Loading application data...</div> : children}
         </main>

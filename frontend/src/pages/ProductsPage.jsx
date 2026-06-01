@@ -9,19 +9,39 @@ import { money } from '../lib/formatters.js';
 
 function ProductModal({ onClose, onCreated, setNotice }) {
   const [form, setForm] = useState({ name: '', sku: '', price: '', stock: '' });
+  const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
   async function submit(event) {
     event.preventDefault();
+    const price = Number(form.price);
+    const stock = Number(form.stock);
+    if (form.name.trim().length < 2) {
+      setError('Product name must be at least 2 characters.');
+      return;
+    }
+    if (form.sku.trim().length < 2) {
+      setError('SKU must be at least 2 characters.');
+      return;
+    }
+    if (!Number.isFinite(price) || price <= 0) {
+      setError('Price must be greater than zero.');
+      return;
+    }
+    if (!Number.isInteger(stock) || stock < 0) {
+      setError('Stock must be a whole number of zero or more.');
+      return;
+    }
+    setError('');
     setSaving(true);
     try {
       await api('/products', {
         method: 'POST',
         body: JSON.stringify({
-          name: form.name,
-          sku: form.sku,
-          price: Number(form.price),
-          stock: Number(form.stock),
+          name: form.name.trim(),
+          sku: form.sku.trim(),
+          price,
+          stock,
         }),
       });
       setNotice('Product created.');
@@ -37,8 +57,9 @@ function ProductModal({ onClose, onCreated, setNotice }) {
   return (
     <Modal title="Add product" onClose={onClose}>
       <form className="modal-form" onSubmit={submit}>
+        {error && <div className="form-error">{error}</div>}
         <label>Product name<input required value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} /></label>
-        <label>SKU<input required value={form.sku} onChange={(event) => setForm({ ...form, sku: event.target.value })} /></label>
+        <label>SKU<input required value={form.sku} onChange={(event) => setForm({ ...form, sku: event.target.value.toUpperCase() })} /></label>
         <label>Price<input required min="0.01" step="0.01" type="number" value={form.price} onChange={(event) => setForm({ ...form, price: event.target.value })} /></label>
         <label>Stock<input required min="0" type="number" value={form.stock} onChange={(event) => setForm({ ...form, stock: event.target.value })} /></label>
         <div className="modal-actions">
@@ -73,7 +94,7 @@ export function ProductsPage({ products, onCreated, setNotice }) {
     <>
       <PageHeader eyebrow="Catalog" title="Products" actionLabel="Add product" actionIcon={Plus} onAction={() => setOpen(true)} />
       <section className="panel">
-        <DataTable columns={columns} rows={products} emptyTitle="No products found." />
+        <DataTable columns={columns} rows={products} emptyTitle="No data available" searchPlaceholder="Search products by name, SKU, price, or status..." />
       </section>
       {isOpen && <ProductModal onClose={() => setOpen(false)} onCreated={onCreated} setNotice={setNotice} />}
     </>

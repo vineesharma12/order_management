@@ -20,6 +20,10 @@ export function App() {
     customers: customers.length,
     orders: orders.length,
     stock: products.reduce((total, product) => total + product.stock, 0),
+    revenue: orders.reduce((total, order) => total + Number(order.total_amount || 0), 0),
+    lowStock: products.filter((product) => product.stock <= 5).length,
+    recentOrders: orders.slice(0, 5),
+    lowStockProducts: products.filter((product) => product.stock <= 5).slice(0, 5),
   }), [products, customers, orders]);
 
   async function loadAll() {
@@ -43,6 +47,14 @@ export function App() {
   useEffect(() => {
     loadAll();
   }, []);
+
+  useEffect(() => {
+    if (!notice) {
+      return undefined;
+    }
+    const timeout = window.setTimeout(() => setNotice(''), 3200);
+    return () => window.clearTimeout(timeout);
+  }, [notice]);
 
   const page = {
     dashboard: <Dashboard stats={stats} />,

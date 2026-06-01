@@ -9,13 +9,34 @@ import { formatDateTime } from '../lib/formatters.js';
 
 function CustomerModal({ onClose, onCreated, setNotice }) {
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
+  const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
   async function submit(event) {
     event.preventDefault();
+    if (form.name.trim().length < 2) {
+      setError('Customer name must be at least 2 characters.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      setError('Enter a valid email address.');
+      return;
+    }
+    if (form.phone.trim() && form.phone.trim().length < 7) {
+      setError('Phone number must be at least 7 characters.');
+      return;
+    }
+    setError('');
     setSaving(true);
     try {
-      await api('/customers', { method: 'POST', body: JSON.stringify(form) });
+      await api('/customers', {
+        method: 'POST',
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+        }),
+      });
       setNotice('Customer created.');
       onCreated();
       onClose();
@@ -29,6 +50,7 @@ function CustomerModal({ onClose, onCreated, setNotice }) {
   return (
     <Modal title="Add customer" onClose={onClose}>
       <form className="modal-form" onSubmit={submit}>
+        {error && <div className="form-error">{error}</div>}
         <label>Customer name<input required value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} /></label>
         <label>Email<input required type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} /></label>
         <label>Phone<input value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} /></label>
@@ -55,7 +77,7 @@ export function CustomersPage({ customers, onCreated, setNotice }) {
     <>
       <PageHeader eyebrow="People" title="Customers" actionLabel="Add customer" actionIcon={Plus} onAction={() => setOpen(true)} />
       <section className="panel">
-        <DataTable columns={columns} rows={customers} emptyTitle="No customers found." />
+        <DataTable columns={columns} rows={customers} emptyTitle="No data available" searchPlaceholder="Search customers by name, email, phone, or date..." />
       </section>
       {isOpen && <CustomerModal onClose={() => setOpen(false)} onCreated={onCreated} setNotice={setNotice} />}
     </>
