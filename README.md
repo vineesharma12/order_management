@@ -75,8 +75,11 @@ For free hosting, use a hosted PostgreSQL provider such as Neon or Supabase, dep
 
 Set these production environment variables:
 
-- Backend: `DATABASE_URL`, `FRONTEND_URL`
+- Backend: `DATABASE_URL`, `FRONTEND_URL`, `CORS_ORIGINS`
 - Frontend build: `VITE_API_URL`
+
+`CORS_ORIGINS` accepts `*` or a comma-separated list of frontend origins,
+for example `https://your-frontend.vercel.app,https://your-domain.com`.
 
 For Neon, use the PostgreSQL connection string from the Neon dashboard as
 `DATABASE_URL`, including `sslmode=require`.

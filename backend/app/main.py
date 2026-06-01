@@ -25,10 +25,12 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Inventory & Order Management API")
 
+allowed_cors_origins = settings.allowed_cors_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_url, "http://localhost:3000", "http://localhost:5173"],
-    allow_credentials=True,
+    allow_origins=allowed_cors_origins,
+    allow_credentials="*" not in allowed_cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
