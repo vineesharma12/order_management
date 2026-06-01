@@ -78,6 +78,9 @@ Set these production environment variables:
 - Backend: `DATABASE_URL`, `FRONTEND_URL`
 - Frontend build: `VITE_API_URL`
 
+For Neon, use the PostgreSQL connection string from the Neon dashboard as
+`DATABASE_URL`, including `sslmode=require`.
+
 Submission checklist:
 
 - GitHub repository link
