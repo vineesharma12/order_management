@@ -22,8 +22,8 @@ export function Shell({ activePage, setActivePage, children, notice, loading, th
             <Boxes size={25} aria-hidden="true" />
           </div>
           <div>
-            <strong>Inventory Management</strong>
-            <span>INVENTORY</span>
+            <strong>Invenza</strong>
+            <span>Inventory Management</span>
           </div>
         </div>
         <nav>
