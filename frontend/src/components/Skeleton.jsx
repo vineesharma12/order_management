@@ -30,11 +30,20 @@ export function DashboardSkeleton() {
           <SkeletonLine className="subheading" />
         </div>
       </div>
+      <section className="stats compact-stats" aria-hidden="true">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <article className="stat skeleton-stat" key={index}>
+            <span className="skeleton-icon" />
+            <SkeletonLine className="short" />
+            <SkeletonLine className="medium" />
+          </article>
+        ))}
+      </section>
       <section className="dashboard-grid" aria-label="Loading dashboard">
         <SkeletonPanel />
         <SkeletonPanel />
-        <SkeletonPanel wide />
       </section>
+      <SkeletonPanel wide />
     </>
   );
 }

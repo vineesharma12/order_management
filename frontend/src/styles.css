@@ -1063,7 +1063,7 @@ button.secondary,
 
 .brand strong {
   color: var(--text);
-  font-size: 1.13rem;
+  font-size: 1.02rem;
   line-height: 1.1;
 }
 
@@ -1130,6 +1130,10 @@ button.secondary,
   margin-left: auto;
 }
 
+.topbar .mobile-menu {
+  margin-left: 0;
+}
+
 .page-main {
   margin: 0;
   max-width: none;
@@ -1175,10 +1179,38 @@ button.secondary,
   transform: none;
 }
 
+.stats {
+  margin-bottom: 1.1rem;
+}
+
+.compact-stats {
+  gap: 0.85rem;
+}
+
+.compact-stats .stat {
+  gap: 0.38rem;
+  min-height: 112px;
+  padding: 0.85rem;
+}
+
+.compact-stats .stat-icon {
+  height: 36px;
+  width: 36px;
+}
+
+.compact-stats .stat span {
+  font-size: 0.8rem;
+}
+
+.compact-stats .stat strong {
+  color: var(--text);
+  font-size: 1.28rem;
+}
+
 .dashboard-grid {
   align-items: stretch;
-  gap: 1.85rem 1.15rem;
-  grid-template-columns: minmax(360px, 0.85fr) minmax(480px, 1.75fr);
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .dashboard-grid .wide {
@@ -1188,8 +1220,8 @@ button.secondary,
 .insight-panel {
   display: flex;
   flex-direction: column;
-  min-height: 460px;
-  padding: 2rem;
+  min-height: 320px;
+  padding: 1.35rem;
 }
 
 .insight-panel.wide {
@@ -1383,6 +1415,56 @@ select {
   margin-top: 0.75rem;
 }
 
+.chart-dashboard {
+  margin-bottom: 1rem;
+}
+
+.chart-panel {
+  gap: 1.1rem;
+}
+
+.chart-panel .apexcharts-canvas {
+  margin: 0 auto;
+}
+
+.chart-panel .apexcharts-legend-text,
+.chart-panel .apexcharts-text {
+  font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif !important;
+}
+
+.chart-panel .apexcharts-tooltip {
+  background: var(--surface) !important;
+  border-color: var(--line) !important;
+  color: var(--text);
+}
+
+.chart-panel .apexcharts-tooltip-title {
+  background: var(--surface-soft) !important;
+  border-bottom-color: var(--line) !important;
+}
+
+.stocked-panel {
+  padding: 1.25rem;
+}
+
+.stocked-panel .panel-title {
+  margin-bottom: 1rem;
+}
+
+.product-rank-list {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.product-rank-list .activity-row {
+  align-items: start;
+  flex-direction: column;
+  min-height: 116px;
+}
+
+.skeleton-stat {
+  pointer-events: none;
+}
+
 .skeleton-line,
 .skeleton-icon,
 .skeleton-orb,
@@ -1535,11 +1617,37 @@ select {
   .sidebar {
     max-width: 322px;
   }
+
+  .topbar {
+    justify-content: flex-start;
+  }
+
+  .topbar-title {
+    flex: 1;
+  }
+
+  .topbar .icon-button:last-child {
+    margin-left: 0;
+  }
 }
 
 @media (max-width: 760px) {
   .page-main {
     padding: 1.2rem;
+  }
+
+  .topbar {
+    gap: 0.55rem;
+    min-height: 64px;
+    padding: 0 0.75rem;
+  }
+
+  .topbar-title {
+    font-size: 1.05rem;
+  }
+
+  .compact-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .dashboard-grid {
@@ -1548,8 +1656,8 @@ select {
   }
 
   .insight-panel {
-    min-height: 340px;
-    padding: 1.35rem;
+    min-height: 300px;
+    padding: 1.1rem;
   }
 
   .insight-panel.wide {
@@ -1567,6 +1675,18 @@ select {
 
   .page-header button {
     width: 100%;
+  }
+
+  .stocked-panel {
+    padding: 1rem;
+  }
+
+  .product-rank-list {
+    grid-template-columns: 1fr;
+  }
+
+  .product-rank-list .activity-row {
+    min-height: 0;
   }
 
   .skeleton-line.button {
