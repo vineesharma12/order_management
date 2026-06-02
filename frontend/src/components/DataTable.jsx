@@ -16,7 +16,7 @@ function getSearchValue(row, columns) {
     .toLowerCase();
 }
 
-export function DataTable({ columns, rows, emptyTitle = 'No data available', searchPlaceholder = 'Search list...' }) {
+export function DataTable({ columns, rows, emptyTitle = 'No data available', emptyDescription, emptyAction, searchPlaceholder = 'Search list...' }) {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const normalizedQuery = query.trim().toLowerCase();
@@ -68,7 +68,13 @@ export function DataTable({ columns, rows, emptyTitle = 'No data available', sea
             ))}
           </tbody>
         </table>
-        {visibleRows.length === 0 && <EmptyState title={rows.length === 0 ? emptyTitle : 'No data available'} />}
+        {visibleRows.length === 0 && (
+          <EmptyState
+            title={rows.length === 0 ? emptyTitle : 'No data available'}
+            description={rows.length === 0 ? emptyDescription : 'Try a different search.'}
+            action={rows.length === 0 ? emptyAction : undefined}
+          />
+        )}
       </div>
       <div className="pagination">
         <span>

@@ -1,65 +1,60 @@
-import { AlertTriangle, Boxes, ClipboardList, IndianRupee, ShoppingCart, UsersRound } from 'lucide-react';
+import { Boxes, ChartNoAxesColumnIncreasing, PackageOpen, ScrollText } from 'lucide-react';
 
+import { EmptyState } from '../components/EmptyState.jsx';
 import { PageHeader } from '../components/PageHeader.jsx';
-import { Stat } from '../components/Stat.jsx';
-import { formatDateTime, money } from '../lib/formatters.js';
 
 export function Dashboard({ stats }) {
+  const hasProducts = stats.products > 0;
+  const hasOrders = stats.orders > 0;
+
   return (
     <>
-      <PageHeader eyebrow="Overview" title="Business dashboard" />
-      <section className="stats">
-        <Stat icon={Boxes} label="Products" value={stats.products} tone="green" />
-        <Stat icon={UsersRound} label="Customers" value={stats.customers} tone="blue" />
-        <Stat icon={ShoppingCart} label="Orders" value={stats.orders} tone="amber" />
-        <Stat icon={IndianRupee} label="Revenue" value={money.format(stats.revenue)} tone="violet" />
-      </section>
+      <PageHeader title="Dashboard" description="Overview of inventory and orders for your Invenza workspace" />
       <section className="dashboard-grid">
         <article className="panel insight-panel">
           <div className="panel-title">
-            <ClipboardList size={20} aria-hidden="true" />
-            <h2>Recent orders</h2>
+            <span className="title-icon teal"><Boxes size={19} aria-hidden="true" /></span>
+            <div>
+              <h2>Stock health</h2>
+              <p>Distribution of stock levels</p>
+            </div>
           </div>
-          <div className="activity-list">
-            {stats.recentOrders.length === 0 && <p className="muted">No orders have been created yet.</p>}
-            {stats.recentOrders.map((order) => (
-              <div className="activity-row" key={order.id}>
-                <div>
-                  <strong>#{order.id} - {order.customer_name}</strong>
-                  <span>{formatDateTime(order.created_at)}</span>
-                </div>
-                <b>{money.format(Number(order.total_amount))}</b>
-              </div>
-            ))}
-          </div>
+          {!hasProducts && <EmptyState title="No products yet" description="Add products to see stock distribution." />}
+          {hasProducts && <div className="metric-hero"><strong>{stats.stock}</strong><span>Total units in stock</span></div>}
         </article>
         <article className="panel insight-panel">
           <div className="panel-title">
-            <AlertTriangle size={20} aria-hidden="true" />
-            <h2>Inventory watch</h2>
-          </div>
-          <div className="inventory-summary">
+            <span className="title-icon purple"><ChartNoAxesColumnIncreasing size={19} aria-hidden="true" /></span>
             <div>
-              <span>Total stock</span>
-              <strong>{stats.stock}</strong>
-            </div>
-            <div>
-              <span>Low stock SKUs</span>
-              <strong>{stats.lowStock}</strong>
+              <h2>Orders by status</h2>
+              <p>Distribution across the order pipeline</p>
             </div>
           </div>
-          <div className="activity-list compact">
-            {stats.lowStockProducts.length === 0 && <p className="muted">All products are comfortably stocked.</p>}
-            {stats.lowStockProducts.map((product) => (
-              <div className="activity-row" key={product.id}>
-                <div>
-                  <strong>{product.name}</strong>
-                  <span>{product.sku}</span>
+          {!hasOrders && <EmptyState title="No orders yet" description="Create your first order to see the breakdown." />}
+          {hasOrders && <div className="metric-hero"><strong>{stats.orders}</strong><span>Total orders created</span></div>}
+        </article>
+        <article className="panel insight-panel wide">
+          <div className="panel-title">
+            <span className="title-icon orange"><PackageOpen size={19} aria-hidden="true" /></span>
+            <div>
+              <h2>Top stocked products</h2>
+              <p>Highest inventory levels</p>
+            </div>
+          </div>
+          {stats.topStockedProducts.length === 0 && <EmptyState icon={ScrollText} title="No products yet" description="Inventory rankings will appear when products are added." />}
+          {stats.topStockedProducts.length > 0 && (
+            <div className="activity-list">
+              {stats.topStockedProducts.map((product) => (
+                <div className="activity-row" key={product.id}>
+                  <div>
+                    <strong>{product.name}</strong>
+                    <span>{product.sku}</span>
+                  </div>
+                  <b>{product.stock} units</b>
                 </div>
-                <b className={product.stock === 0 ? 'danger' : 'warning'}>{product.stock} left</b>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </article>
       </section>
     </>

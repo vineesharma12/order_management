@@ -14,6 +14,7 @@ export function App() {
   const [notice, setNotice] = useState('');
   const [loading, setLoading] = useState(true);
   const [activePage, setActivePage] = useState('dashboard');
+  const [theme, setTheme] = useState(() => window.localStorage.getItem('theme') || 'dark');
 
   const stats = useMemo(() => ({
     products: products.length,
@@ -24,6 +25,7 @@ export function App() {
     lowStock: products.filter((product) => product.stock <= 5).length,
     recentOrders: orders.slice(0, 5),
     lowStockProducts: products.filter((product) => product.stock <= 5).slice(0, 5),
+    topStockedProducts: [...products].sort((left, right) => right.stock - left.stock).slice(0, 5),
   }), [products, customers, orders]);
 
   async function loadAll() {
@@ -49,6 +51,11 @@ export function App() {
   }, []);
 
   useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    window.localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  useEffect(() => {
     if (!notice) {
       return undefined;
     }
@@ -64,7 +71,15 @@ export function App() {
   }[activePage];
 
   return (
-    <Shell activePage={activePage} setActivePage={setActivePage} notice={notice} loading={loading} onRefresh={loadAll}>
+    <Shell
+      activePage={activePage}
+      setActivePage={setActivePage}
+      notice={notice}
+      loading={loading}
+      onRefresh={loadAll}
+      theme={theme}
+      onToggleTheme={() => setTheme((current) => (current === 'dark' ? 'light' : 'dark'))}
+    >
       {page}
     </Shell>
   );

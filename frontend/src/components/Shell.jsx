@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { CheckCircle2, Menu, RefreshCw, Search, X } from 'lucide-react';
+import { Boxes, CheckCircle2, Menu, Moon, Sun, X } from 'lucide-react';
 
 import { navItems } from '../data/navigation.jsx';
+import { DashboardSkeleton, TableSkeleton } from './Skeleton.jsx';
 
-export function Shell({ activePage, setActivePage, children, notice, loading, onRefresh }) {
+export function Shell({ activePage, setActivePage, children, notice, loading, theme, onToggleTheme }) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   function goTo(page) {
@@ -11,14 +12,18 @@ export function Shell({ activePage, setActivePage, children, notice, loading, on
     setMobileNavOpen(false);
   }
 
+  const loadingContent = activePage === 'dashboard' ? <DashboardSkeleton /> : <TableSkeleton />;
+
   return (
     <div className="app-shell">
       <aside className={`sidebar ${mobileNavOpen ? 'open' : ''}`}>
         <div className="brand">
-          <div className="brand-mark">IO</div>
+          <div className="brand-mark">
+            <Boxes size={25} aria-hidden="true" />
+          </div>
           <div>
-            <strong>OrderDesk</strong>
-            <span>Inventory operations</span>
+            <strong>Invenza</strong>
+            <span>INVENTORY</span>
           </div>
         </div>
         <nav>
@@ -32,18 +37,19 @@ export function Shell({ activePage, setActivePage, children, notice, loading, on
             );
           })}
         </nav>
+        <div className="sidebar-footer">
+          <span>v1.0.0</span>
+          <span>Invenza - Assessment build</span>
+        </div>
       </aside>
       <div className="workspace">
         <header className="topbar">
           <button className="icon-button ghost mobile-menu" type="button" onClick={() => setMobileNavOpen(true)} aria-label="Open menu" title="Open menu">
             <Menu size={20} aria-hidden="true" />
           </button>
-          <div className="search-box">
-            <Search size={17} aria-hidden="true" />
-            <span>Inventory and order operations</span>
-          </div>
-          <button className="icon-button ghost" type="button" onClick={onRefresh} aria-label="Refresh data" title="Refresh data">
-            <RefreshCw size={20} aria-hidden="true" />
+          <strong className="topbar-title">{navItems.find((item) => item.id === activePage)?.label || 'Dashboard'}</strong>
+          <button className="icon-button ghost" type="button" onClick={onToggleTheme} aria-label="Toggle theme" title="Toggle theme">
+            {theme === 'dark' ? <Sun size={22} aria-hidden="true" /> : <Moon size={22} aria-hidden="true" />}
           </button>
         </header>
         {notice && (
@@ -54,7 +60,7 @@ export function Shell({ activePage, setActivePage, children, notice, loading, on
           </div>
         )}
         <main className="page-main">
-          {loading ? <div className="loading">Loading application data...</div> : children}
+          {loading ? loadingContent : children}
         </main>
       </div>
       {mobileNavOpen && <button className="nav-scrim" type="button" aria-label="Close menu" onClick={() => setMobileNavOpen(false)} />}

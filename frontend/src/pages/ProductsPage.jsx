@@ -92,9 +92,16 @@ export function ProductsPage({ products, onCreated, setNotice }) {
 
   return (
     <>
-      <PageHeader eyebrow="Catalog" title="Products" actionLabel="Add product" actionIcon={Plus} onAction={() => setOpen(true)} />
+      <PageHeader title="Products" description="Manage your product catalogue" actionLabel="New product" actionIcon={Plus} onAction={() => setOpen(true)} />
       <section className="panel">
-        <DataTable columns={columns} rows={products} emptyTitle="No data available" searchPlaceholder="Search products by name, SKU, price, or status..." />
+        <DataTable
+          columns={columns}
+          rows={products}
+          emptyTitle="No products found"
+          emptyDescription="Try a different search or create your first product."
+          emptyAction={<button type="button" onClick={() => setOpen(true)}><Plus size={17} aria-hidden="true" />Add product</button>}
+          searchPlaceholder="Search by name or SKU..."
+        />
       </section>
       {isOpen && <ProductModal onClose={() => setOpen(false)} onCreated={onCreated} setNotice={setNotice} />}
     </>
